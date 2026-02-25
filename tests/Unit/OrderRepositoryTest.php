@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Repositories\OrderRepository;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class OrderRepositoryTest extends TestCase
@@ -17,7 +18,7 @@ class OrderRepositoryTest extends TestCase
         $this->repository = new OrderRepository();
     }
 
-    /** @test */
+    #[Test]
     public function test_it_finds_order_by_id()
     {
         $order = Order::factory()->create();
@@ -28,7 +29,7 @@ class OrderRepositoryTest extends TestCase
         $this->assertEquals($order->id, $found->id);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_finds_orders_by_customer()
     {
         $customer = Customer::factory()->create();
@@ -40,7 +41,7 @@ class OrderRepositoryTest extends TestCase
         $this->assertCount(2, $orders);
     }
 
-    /** @test */
+    #[Test]
     public function test_it_finds_orders_by_status()
     {
         Order::factory()->count(2)->create(['status' => Order::STATUS_PENDING]);

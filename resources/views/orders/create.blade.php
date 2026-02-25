@@ -97,6 +97,20 @@
                     </div>
                 </div>
 
+                <!-- Promo Code -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        <i class="fas fa-tag mr-1"></i>Promo Code (Optional)
+                    </label>
+                    <input type="text" name="promo_code" value="{{ old('promo_code') }}"
+                           placeholder="Enter BLACKFRIDAY or WINTER"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent uppercase">
+                    <p class="text-xs text-gray-500 mt-1">Try: BLACKFRIDAY (25% off + Bulk discount + Tax) or WINTER (10% seasonal discount)</p>
+                    @error('promo_code')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Submit Button -->
                 <div class="flex gap-4">
                     <button type="submit" class="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition font-semibold">

@@ -68,6 +68,11 @@
                                     <div class="ml-4 flex-1">
                                         <h3 class="font-semibold text-gray-800">{{ $item['name'] }}</h3>
                                         <p class="text-sm text-gray-600">Quantity: {{ $item['quantity'] }}</p>
+                                        @if(isset($item['price_description']))
+                                            <p class="text-xs text-purple-600 italic">
+                                                <i class="fas fa-tag mr-1 text-[10px]"></i>{{ $item['price_description'] }}
+                                            </p>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="text-right">
