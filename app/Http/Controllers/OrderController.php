@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Enums\ShippingMethodEnum;
+use App\Http\Requests\Order\OrderStoreRequest;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\Product;
-use App\Services\OrderService;
-use App\Services\Shipping\StandardShipping;
-use App\Services\Shipping\ExpressShipping;
-use App\Services\Shipping\OvernightShipping;
 use App\Repositories\Contracts\OrderRepositoryInterface;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -42,25 +41,14 @@ class OrderController extends Controller
         $customers = Customer::all();
         $products = Product::where('stock', '>', 0)->get();
 
-        $shippingMethods = [
-            'standard' => 'Standard Shipping (7 days)',
-            'express' => 'Express Shipping (3 days)',
-            'overnight' => 'Overnight Shipping (1 day)',
-        ];
+        $shippingMethods = ShippingMethodEnum::options();
 
         return view('orders.create', compact('customers', 'products', 'shippingMethods'));
     }
 
-    public function store(Request $request)
+    public function store(OrderStoreRequest $request)
     {
-        $validated = $request->validate([
-            'customer_id' => 'required|exists:customers,id',
-            'shipping_method' => 'required|in:standard,express,overnight',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-        ]);
-
+        $validated = $request->validated();
         try {
             $customer = Customer::findOrFail($validated['customer_id']);
 
@@ -75,11 +63,7 @@ class OrderController extends Controller
             }
 
             // Get shipping strategy
-            $shippingStrategy = match($validated['shipping_method']) {
-                'standard' => new StandardShipping(),
-                'express' => new ExpressShipping(),
-                'overnight' => new OvernightShipping(),
-            };
+            $shippingStrategy = $request->getShippingStrategy();
 
             // Create order
             $order = $this->orderService->createOrder($customer, $items, $shippingStrategy);
