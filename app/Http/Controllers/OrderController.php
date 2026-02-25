@@ -65,8 +65,24 @@ class OrderController extends Controller
             // Get shipping strategy
             $shippingStrategy = $request->getShippingStrategy();
 
+            // Apply pricing modifiers based on promo code
+            $modifiers = [];
+            if ($validated['promo_code'] ?? null) {
+                $modifiers = match(strtoupper($validated['promo_code'])) {
+                    'BLACKFRIDAY' => [
+                        ['type' => 'discount', 'percentage' => 25],
+                        ['type' => 'bulk', 'min_quantity' => 10, 'discount' => 15],
+                        ['type' => 'tax', 'rate' => 0.10],
+                    ],
+                    'WINTER' => [
+                        ['type' => 'seasonal', 'season' => 'Winter', 'multiplier' => 0.90], // 10% winter discount
+                    ],
+                    default => [],
+                };
+            }
+
             // Create order
-            $order = $this->orderService->createOrder($customer, $items, $shippingStrategy);
+            $order = $this->orderService->createOrder($customer, $items, $shippingStrategy, $modifiers);
 
             return redirect()->route('orders.show', $order->id)
                 ->with('success', 'Order created successfully!');

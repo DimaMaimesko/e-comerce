@@ -9,6 +9,7 @@ use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Services\Shipping\ShippingStrategy;
 use App\Services\Factories\PaymentFactory;
+use App\Services\Pricing\PricingService;
 use App\Events\OrderCreated;
 use App\Events\OrderPaid;
 use App\Events\OrderShipped;
@@ -18,13 +19,15 @@ class OrderService
     public function __construct(
         private OrderRepositoryInterface $orderRepository,
         private ProductRepositoryInterface $productRepository,
-        private PaymentFactory $paymentFactory
+        private PaymentFactory $paymentFactory,
+        private PricingService $pricingService
     ) {}
 
     public function createOrder(
         Customer $customer,
         array $items,
-        ShippingStrategy $shippingStrategy
+        ShippingStrategy $shippingStrategy,
+        array $modifiers = []
     ): Order {
         // Validate stock availability
         foreach ($items as $item) {
@@ -39,13 +42,20 @@ class OrderService
         }
 
         // Prepare items for storage
-        $orderItems = array_map(function($item) {
+        $orderItems = array_map(function($item) use ($modifiers) {
+            $pricing = $this->pricingService->calculateCustomPrice(
+                $item['product'],
+                $item['quantity'],
+                $modifiers
+            );
+
             return [
                 'product_id' => $item['product']->id,
                 'name' => $item['product']->name,
-                'price' => $item['product']->price,
+                'price' => round($pricing['price'] / $item['quantity'], 2),
                 'quantity' => $item['quantity'],
                 'weight' => $item['product']->weight,
+                'price_description' => $pricing['description'],
             ];
         }, $items);
 
