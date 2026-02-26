@@ -7,6 +7,10 @@ use App\Models\Customer;
 use App\Models\Product;
 use App\Repositories\Contracts\OrderRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
+use App\Services\OrderValidation\CustomerCreditValidator;
+use App\Services\OrderValidation\MinimumOrderValueValidator;
+use App\Services\OrderValidation\PaymentMethodValidator;
+use App\Services\OrderValidation\StockValidator;
 use App\Services\Shipping\ShippingStrategy;
 use App\Services\Factories\PaymentFactory;
 use App\Services\Pricing\PricingService;
@@ -23,23 +27,51 @@ class OrderService
         private PricingService $pricingService
     ) {}
 
+    /**
+     * Chain of Responsibility Pattern: Validate order through a chain of validators
+     */
+    public function validateOrder(array $orderData): void
+    {
+        // Build the validation chain
+        $stockValidator = new StockValidator();
+        $creditValidator = new CustomerCreditValidator();
+        $minimumOrderValidator = new MinimumOrderValueValidator(10.0);
+        $paymentValidator = new PaymentMethodValidator();
+
+//        // Link validators in a chain
+        $stockValidator
+            ->setNext($creditValidator)
+            ->setNext($minimumOrderValidator)
+            ->setNext($paymentValidator);
+
+        // Start the validation chain
+        // Each validator will check and pass to the next
+        $stockValidator->validate($orderData);
+    }
+
     public function createOrder(
         Customer $customer,
         array $items,
         ShippingStrategy $shippingStrategy,
         array $modifiers = []
     ): Order {
-        // Validate stock availability
-        foreach ($items as $item) {
-            $product = $item['product'];
-            $quantity = $item['quantity'];
-
-            if (!$product->isInStock($quantity)) {
-                throw new \DomainException(
-                    "Product {$product->name} has insufficient stock"
-                );
-            }
-        }
+        // Chain of Responsibility: Validate before processing
+//        $this->validateOrder([
+//            'customer' => $customer,
+//            'items' => $items,
+//            'payment_method' => 'credit_card' // You can make this dynamic
+//        ]);
+//         Validate stock availability
+//        foreach ($items as $item) {
+//            $product = $item['product'];
+//            $quantity = $item['quantity'];
+//
+//            if (!$product->isInStock($quantity)) {
+//                throw new \DomainException(
+//                    "Product {$product->name} has insufficient stock"
+//                );
+//            }
+//        }
 
         // Prepare items for storage
         $orderItems = array_map(function($item) use ($modifiers) {
