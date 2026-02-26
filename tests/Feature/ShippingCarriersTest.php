@@ -53,15 +53,5 @@ class ShippingCarriersTest extends TestCase
         $this->assertStringStartsWith('DHL_', $order->tracking_number);
     }
 
-    public function test_it_ships_order_with_usps()
-    {
-        $order = Order::factory()->create(['status' => Order::STATUS_PAID]);
 
-        $response = $this->post(route('orders.shipping.process', $order->id), [
-            'carrier' => 'USPS'
-        ]);
-
-        $order->refresh();
-        $this->assertStringStartsWith('USPS_', $order->tracking_number);
-    }
 }

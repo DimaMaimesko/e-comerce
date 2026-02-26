@@ -11,6 +11,7 @@ use App\Services\OrderValidation\CustomerCreditValidator;
 use App\Services\OrderValidation\MinimumOrderValueValidator;
 use App\Services\OrderValidation\PaymentMethodValidator;
 use App\Services\OrderValidation\StockValidator;
+use App\Services\Shipping\Carriers\ShippingService;
 use App\Services\Shipping\ShippingStrategy;
 use App\Services\Factories\PaymentFactory;
 use App\Services\Pricing\PricingService;
@@ -24,7 +25,8 @@ class OrderService
         private OrderRepositoryInterface $orderRepository,
         private ProductRepositoryInterface $productRepository,
         private PaymentFactory $paymentFactory,
-        private PricingService $pricingService
+        private PricingService $pricingService,
+        private ShippingService $shippingService,
     ) {}
 
     /**
@@ -180,10 +182,12 @@ class OrderService
         if (!$order->isPaid()) {
             throw new \DomainException("Order must be paid before shipping: $orderId");
         }
+        $label = $this->shippingService->createShipment($order, $carrier);
 
-        $trackingNumber = strtoupper($carrier) . '_' . uniqid();
+        $trackingNumber = $label->trackingNumber;
         $order->tracking_number = $trackingNumber;
         $order->status = Order::STATUS_SHIPPED;
+        $order->shipping_cost = $label->cost;
         $this->orderRepository->save($order);
 
         echo "\n┌─────────────────────────────────────────────┐\n";
