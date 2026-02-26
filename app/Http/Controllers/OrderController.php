@@ -82,6 +82,11 @@ class OrderController extends Controller
             }
 
             // Create order
+            $this->orderService->validateOrder([
+                'customer' => $customer,
+                'items' => $items,
+                'payment_method' => 'stripe' // You can make this dynamic
+        ]);
             $order = $this->orderService->createOrder($customer, $items, $shippingStrategy, $modifiers);
 
             return redirect()->route('orders.show', $order->id)
