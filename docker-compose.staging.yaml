@@ -54,6 +54,8 @@ services:
     image: mysql:8.4
     container_name: ecommerce-mysql
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_USER: ${DB_USERNAME}
