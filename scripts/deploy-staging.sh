@@ -40,7 +40,7 @@ $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app sh -c "
 "
 
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan migrate --force
-$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan db:seed
+#$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan db:seed
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan optimize:clear
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan config:cache
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan route:cache
