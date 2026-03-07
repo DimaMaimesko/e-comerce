@@ -49,4 +49,4 @@ $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan event:cache
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan queue:restart || true
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan storage:link || true
 
-$DOCKER_COMPOSE -f "$COMPOSE_FILE" up -d --force-recreate queue scheduler
+$DOCKER_COMPOSE -f "$COMPOSE_FILE" up -d --force-recreate app nginx queue scheduler
