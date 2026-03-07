@@ -28,8 +28,20 @@ fi
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" pull
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" up -d --remove-orphans
 
+$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app sh -c "
+  mkdir -p \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/views \
+    storage/logs \
+    bootstrap/cache &&
+  chown -R www-data:www-data storage bootstrap/cache &&
+  chmod -R 775 storage bootstrap/cache
+"
+
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan migrate --force
-$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan config:clear
+$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan db:seed
+$DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan optimize:clear
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan config:cache
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan route:cache
 $DOCKER_COMPOSE -f "$COMPOSE_FILE" exec -T app php artisan view:cache
