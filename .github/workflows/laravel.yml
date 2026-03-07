@@ -91,7 +91,7 @@ jobs:
           host: ${{ secrets.STAGING_HOST }}
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
-          source: "docker-compose.staging.yml,docker/nginx/default.conf,scripts/deploy-staging.sh"
+          source: "docker-compose.staging.yaml,docker/nginx/default.conf,scripts/deploy-staging.sh"
           target: "/opt/e-commerce"
 
       - name: Deploy to staging
