@@ -6,7 +6,7 @@
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-800 mb-2">
             <i class="fas fa-home text-purple-600"></i>
-            WWelcome to E-Commerce System
+            Welcome to E-Commerce System
         </h1>
         <p class="text-gray-600 text-lg">Demonstrating Clean Architecture with 4 Design Patterns</p>
     </div>
