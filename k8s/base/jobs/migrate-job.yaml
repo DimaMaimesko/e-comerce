@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: app-migrate
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: app-migrate
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: app-migrate
+          image: ecommerce-k8s-local:latest
+          imagePullPolicy: IfNotPresent
+          command: ["php", "artisan", "migrate", "--force"]
+          envFrom:
+            - configMapRef:
+                name: ecommerce-config
+            - secretRef:
+                name: ecommerce-secret
