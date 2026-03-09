@@ -6,6 +6,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\OrderController;
 
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'service' => config('app.name'),
+        'timestamp' => now()->toIso8601String(),
+    ]);
+})->name('health');
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
