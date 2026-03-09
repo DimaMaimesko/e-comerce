@@ -137,3 +137,18 @@ jobs:
 
             chmod +x scripts/deploy-staging.sh
             ./scripts/deploy-staging.sh
+
+      - name: Smoke test staging health endpoint
+        run: |
+          for attempt in 1 2 3 4 5; do
+            echo "Smoke test attempt ${attempt}..."
+            if curl --fail --silent --show-error "${{ secrets.STAGING_URL }}/health"; then
+              echo ""
+              echo "Smoke test passed."
+              exit 0
+            fi
+            sleep 10
+          done
+
+          echo "Smoke test failed after 5 attempts."
+          exit 1
