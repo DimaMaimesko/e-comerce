@@ -2,9 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ecommerce-ingress
-  namespace: ecommerce-local
 spec:
-  ingressClassName: nginx
   rules:
     - host: ecommerce.local
       http:

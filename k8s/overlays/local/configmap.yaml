@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecommerce-config
+data:
+  APP_NAME: ECommerce
+  APP_ENV: local
+  APP_DEBUG: "true"
+  APP_URL: http://ecommerce.local
+
+  DB_CONNECTION: mysql
+  DB_HOST: mysql
+  DB_PORT: "3306"
+  DB_DATABASE: ecommerce
+
+  CACHE_STORE: file
+  QUEUE_CONNECTION: database
+  SESSION_DRIVER: database
