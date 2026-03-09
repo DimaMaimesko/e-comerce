@@ -142,7 +142,7 @@ jobs:
         run: |
           for attempt in 1 2 3 4 5; do
             echo "Smoke test attempt ${attempt}..."
-            if curl --fail --silent --show-error "${{ secrets.STAGING_URL }}/health"; then
+            if curl --fail --silent --show-error "${{ secrets.STAGING_URL }}health"; then
               echo ""
               echo "Smoke test passed."
               exit 0
