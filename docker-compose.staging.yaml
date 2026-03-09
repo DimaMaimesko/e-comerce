@@ -14,7 +14,7 @@ services:
       - staging
 
   app:
-    image: ${APP_IMAGE}
+    image: ${`APP_IMAGE`}
     container_name: ecommerce-app
     restart: unless-stopped
     env_file:

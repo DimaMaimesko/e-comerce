@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: ecommerce-local
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler
+  template:
+    metadata:
+      labels:
+        app: scheduler
+    spec:
+      containers:
+        - name: scheduler
+          image: ecommerce-k8s-local:latest
+          imagePullPolicy: Never
+          command:
+            - sh
+            - -c
+            - while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done
+          env:
+            - name: APP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: APP_NAME
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: APP_ENV
+            - name: APP_DEBUG
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: APP_DEBUG
+            - name: APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: APP_URL
+            - name: DB_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: DB_CONNECTION
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: DB_PORT
+            - name: DB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: DB_DATABASE
+            - name: CACHE_STORE
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: CACHE_STORE
+            - name: QUEUE_CONNECTION
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: QUEUE_CONNECTION
+            - name: SESSION_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: ecommerce-config
+                  key: SESSION_DRIVER
+            - name: APP_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ecommerce-secret
+                  key: APP_KEY
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: ecommerce-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ecommerce-secret
+                  key: DB_PASSWORD
