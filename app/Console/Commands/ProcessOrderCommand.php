@@ -13,7 +13,7 @@ use App\Services\Shipping\OvernightShipping;
 class ProcessOrderCommand extends Command
 {
     protected $signature = 'order:demo';
-    protected $description = 'Run order  processing demo with all design patterns';
+    protected $description = 'Run order processing demo with all design patterns';
 
     public function __construct(
         private OrderService $orderService
