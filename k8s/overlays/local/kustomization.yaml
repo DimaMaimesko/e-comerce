@@ -11,4 +11,4 @@ patches:
 images:
   - name: ecommerce-app
     newName: ghcr.io/dimamaimesko/e-comerce
-    newTag: sha-321707b
+    newTag: sha-090ee60
