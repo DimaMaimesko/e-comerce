@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ecommerce-k8s-local:latest
+          image: ecommerce-app
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: scheduler
-          image: ecommerce-k8s-local:latest
+          image: ecommerce-app
           imagePullPolicy: IfNotPresent
           command:
             - sh

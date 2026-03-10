@@ -13,6 +13,6 @@ patches:
   - path: ingress-patch.yaml
 
 images:
-  - name: ecommerce-k8s-local
-    newName: ecommerce-k8s-local
-    newTag: latest
+  - name: ecommerce-app
+    newName: ghcr.io/dimamaimesko/e-comerce
+    newTag: staging

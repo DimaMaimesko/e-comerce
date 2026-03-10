@@ -12,7 +12,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: app-migrate
-          image: ecommerce-k8s-local:latest
+          image: ecommerce-app
           imagePullPolicy: IfNotPresent
           command: ["php", "artisan", "migrate", "--force"]
           envFrom:
