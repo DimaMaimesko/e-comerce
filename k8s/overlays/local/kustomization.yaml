@@ -15,4 +15,4 @@ patches:
 images:
   - name: ecommerce-app
     newName: ghcr.io/dimamaimesko/e-comerce
-    newTag: staging
+    newTag: sha-001
