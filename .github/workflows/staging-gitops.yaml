@@ -55,6 +55,10 @@ jobs:
     needs: test
     if: github.actor != 'github-actions[bot]'
 
+    permissions:
+      contents: write
+      packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
