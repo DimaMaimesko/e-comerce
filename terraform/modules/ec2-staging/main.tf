@@ -37,6 +37,21 @@ resource "aws_security_group" "this" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+    ingress {
+        description = "k3s API (kubectl)"
+        from_port   = 6443
+        to_port     = 6443
+        protocol    = "tcp"
+        cidr_blocks = [var.ssh_allowed_cidr]
+    }
+
+    ingress {
+        description = "ArgoCD UI"
+        from_port   = 30443
+        to_port     = 30443
+        protocol    = "tcp"
+        cidr_blocks = [var.ssh_allowed_cidr]
+    }
 
   egress {
     description = "All outbound"

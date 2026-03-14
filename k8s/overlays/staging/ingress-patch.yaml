@@ -1,12 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
-  annotations:
-    kubernetes.io/ingress.class: traefik
+  name: ecommerce-ingress
 spec:
   rules:
-    - http:
+    - host: ecommerce.local
+      http:
         paths:
           - path: /
             pathType: Prefix
